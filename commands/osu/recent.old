@@ -1,0 +1,79 @@
+const { SlashCommandBuilder } = require('discord.js');
+const { getCredentials } = require('../../lib/osu/osuAuth.js');
+const { convertUserUrl, getUserRecentActivity } = require('../../lib/osu/users.js');
+const { showRecentActivity } = require('../../lib/embeds/users.js');
+const { textConfirmation } = require('../../lib/embeds/text-confirmation.js');
+const fs = require('fs');
+
+module.exports = {
+  data: new SlashCommandBuilder()
+    .setName('recent')
+    .addStringOption(option => option.setName('nickname')
+      .setDescription('Input osu! nickname (Optional)'))
+    .setDescription("Get user's recent osu! activities"),
+  async execute(interaction) {
+    // Loading message
+    await interaction.deferReply();
+
+    var showEmbed, convertedUrl, beatmapId, mode;
+
+    // osu auth and get value from slash command option
+    const osuToken = await getCredentials();
+    const discordUserInput = interaction.user.id;
+
+    const filePath = 'lib/localdb/osuNickname.json';
+    const filePathRecent = 'lib/localdb/recent.json';
+
+    let nicknameOptional = interaction.options.getString('nickname');
+
+    // Read json
+    const jsonData = JSON.parse(fs.readFileSync(filePath));
+    const hasNickname = jsonData[discordUserInput]?.osuNickname;
+
+    let nickname = nicknameOptional || hasNickname;
+
+    if (nickname) {
+      try {
+        convertedUrl = await convertUserUrl(osuToken, nickname);
+        recentData = await getUserRecentActivity(osuToken, convertedUrl);
+
+        if (recentData.data) {
+          function getBeatmapId(urlString) {
+            const regex = /\/b\/(\d+)/;
+            const match = regex.exec(urlString);
+          
+            if (match) {
+              return match[1];
+            }
+          
+            return null;
+          }
+
+          beatmapId = getBeatmapId(recentData.data[0].beatmap.url);
+          mode = recentData.data[0].mode
+
+          console.log(beatmapId);
+
+          const recentJson = {
+            beatmap_id: beatmapId,
+            mode: mode
+          };
+
+          const jsonStringRecent = JSON.stringify(recentJson, null, 2);
+          fs.writeFileSync(filePathRecent, jsonStringRecent);
+
+          showEmbed = await showRecentActivity(recentData.data[0]);
+        } else {
+          showEmbed = await textConfirmation((nickname === nicknameOptional ? `${nickname} doesn't have` : "You don't have") + " any recent plays", "primary");
+        }
+      } catch (e) {
+        console.log(e);
+        showEmbed = await textConfirmation(`User not found`, "danger");
+      }
+    } else {
+      showEmbed = await textConfirmation("You haven't set your osu! nickname. Please use /set-osu first", "danger");
+    }
+
+    await interaction.editReply({ embeds: [showEmbed] });
+  },
+}

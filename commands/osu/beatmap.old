@@ -1,0 +1,72 @@
+const { SlashCommandBuilder } = require('discord.js');
+const { showBetmapInfo } = require('../../lib/embeds/beatmap.js');
+const { textConfirmation } = require('../../lib/embeds/text-confirmation.js');
+const { getCredentials } = require('../../lib/osu/osuAuth.js');
+const { beatmapInfo, beatmapDownload, beatmapDelete, calculatePP } = require('../../lib/osu/beatmap.js');
+
+require('dotenv').config()
+
+module.exports = {
+  data: new SlashCommandBuilder()
+    .setName('beatmap')
+    .setDescription('Get osu! beatmap info!')
+    .addStringOption(option => option.setName('link')
+      .setDescription('Beatmap link goes here')
+      .setRequired(true)),
+  async execute(interaction) {
+    // Reply First
+    await interaction.deferReply();
+
+    // Init var
+    var showEmbed;
+
+    // Get token and last URL segment
+    const osuToken = await getCredentials();
+    const beatmapLink = interaction.options.getString('link');
+
+    // Check if link is valid
+    const isOsuLink = beatmapLink.includes('osu.ppy.sh');
+    const segmentCount = beatmapLink.split('/').length - 1 - (beatmapLink.startsWith('http://') ? 2 : 0);
+
+    try {
+      if (isOsuLink && segmentCount === 5) {
+        // Get beatmap id from the link
+        const beatmapID = beatmapLink.substring(beatmapLink.lastIndexOf('/') + 1);
+
+        async function detectGamemodeFromUrl(url) {
+          if (url.includes('#osu')) {
+            return 0;
+          } else if (url.includes('#taiko')) {
+            return 1;
+          } else if (url.includes('#fruits')) {
+            return 2;
+          } else if (url.includes('#mania')) {
+            return 3;
+          } else {
+            return 0;
+          }
+        }
+
+        // osu auth bullshit stuff
+        const beatmapRes = await beatmapInfo(osuToken, beatmapID);
+        const beatmapData = beatmapRes.data;
+
+        // Download .osu file and calculate PP :kappa:
+        const fileName = await beatmapDownload(beatmapID);
+        const diffMode = await detectGamemodeFromUrl(beatmapLink);
+        const calcDiff = await calculatePP(fileName, diffMode);
+
+        // Show embed and delete local .osu file
+        showEmbed = await showBetmapInfo(beatmapData, calcDiff, diffMode);
+        await beatmapDelete(beatmapID);
+      } else {
+        showEmbed = await textConfirmation("Invalid beatmap link. Must include the full link.\nExample full link: https://osu.ppy.sh/beatmapsets/1976454#fruits/4102302", "danger");
+      }
+    } catch (e) {
+      console.error(e);
+      ashowEmbed = await textConfirmation("Something went wrong.", "danger");
+    }
+
+    await interaction.editReply({ embeds: [showEmbed] });
+  },
+};

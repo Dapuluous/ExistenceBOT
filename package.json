@@ -1,0 +1,26 @@
+{
+  "name": "lezatos",
+  "version": "1.0.0",
+  "description": "Discord BOT for Existence",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dapulezatos",
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/opus": "^0.9.0",
+    "@discordjs/voice": "^0.16.0",
+    "axios": "^1.6.2",
+    "cargo-cp-artifact": "^0.1.8",
+    "discord-player": "^6.6.4",
+    "discord.js": "^14.13.0",
+    "distube": "^4.1.0",
+    "dotenv": "^16.3.1",
+    "fluent-ffmpeg": "^2.1.2",
+    "node-cron": "^3.0.3",
+    "rosu-pp": "^0.9.4",
+    "ytdl-core": "^4.11.5"
+  },
+  "keywords": []
+}
