@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
 const fs = require('fs');
 const { getUserProfile, saveUserInformation } = require('../../lib/osu/user.js');
-const { textConfirmation } = require('../../lib/templates/textConfirmation.js');
+const { textConfirmation } = require('../../lib/templates/components.js');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -17,7 +17,7 @@ module.exports = {
     // Variables
     const nickname = interaction.options.getString('nickname'); // Get user's nickname input
     const discordUserID = interaction.user.id; // Get Discord user's ID
-    let embedMsg = await textConfirmation(`You have linked your osu! account **${nickname}**`, "primary"); // Default embed message
+    let embedMsg;
 
     try {
       // Get user's info and save their id & nickname
@@ -29,6 +29,7 @@ module.exports = {
         const userID = userInfo.id;
         const userNickname = nickname == "null" ? "null" : userInfo.username;
         await saveUserInformation(userID, userNickname, discordUserID);
+        embedMsg = await textConfirmation(`You have linked your osu! account **${nickname}**`, "primary");
       }
     } catch (e) {
       embedMsg = await textConfirmation("Something went wrong", "danger");
