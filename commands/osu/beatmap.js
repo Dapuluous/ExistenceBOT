@@ -1,8 +1,8 @@
 require('dotenv').config()
 const { SlashCommandBuilder } = require('discord.js');
-const { getBeatmapInfo, getBeatmapPP, separateBeatmapModeAndID } = require('../../lib/osu/beatmap');
+const { getBeatmapInfo, getBeatmapPP, separateBeatmapModeAndID } = require('../../lib/components/components-osu');
 const { osuBeatmapInfoEmbeds } = require('../../lib/embeds/osu/beatmap');
-const { textConfirmation } = require('../../lib/templates/components');
+const { textConfirmation } = require('../../lib/components/components');
 
 
 module.exports = {

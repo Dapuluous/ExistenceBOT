@@ -1,8 +1,7 @@
 const fs = require('fs');
 const { SlashCommandBuilder } = require('discord.js');
-const { getUserProfile } = require('../../lib/osu/user');
-const { consoleLogText, textConfirmation } = require('../../lib/templates/components');
-const { readFile } = require('../../lib/general/files');
+const { getUserProfile } = require('../../lib/components/components-osu');
+const { consoleLogText, textConfirmation, readFile } = require('../../lib/components/components');
 const { userProfileEmbeds } = require('../../lib/embeds/osu/user');
 
 module.exports = {

@@ -1,7 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
-const fs = require('fs');
-const { getUserProfile, saveUserInformation } = require('../../lib/osu/user.js');
-const { textConfirmation } = require('../../lib/templates/components.js');
+const { getUserProfile, saveUserInformation } = require('../../lib/components/components-osu');
+const { textConfirmation } = require('../../lib/components/components');
 
 module.exports = {
   data: new SlashCommandBuilder()
