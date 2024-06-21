@@ -17,3 +17,16 @@ There are variables you must fill in order to use the BOT properly
 2. Run the command `node index.js`
 
 The BOT is set up for server only use. If you want to make it global, make sure you adjust it yourself.
+
+# Current Features (Slash Commands)
+| Commands | Description |
+| ----------- | ----------- |
+| /ping | Returns "pong!" |
+| /roll | Returns number between 1 to 100 |
+| /set-osu \<nickname*> | Set your osu! nickname. Each account will only have 1 nickname |
+| /beatmap | Returns beatmap info from osu! along with the expected PP for each mod combination |
+| /profile \<mode*> \<nickname**> | Returns user's info based on their selected gamemode |
+
+Notes: <br>
+*: Required <br>
+**: Optional
