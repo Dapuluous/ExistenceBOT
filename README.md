@@ -1,8 +1,8 @@
 # Existence Discord BOT
-I use this to practice writing clean code
+I use this to practice writing clean code.  Not everything is clean, of course.
 
 # .env files
-There are variables you must fill in order to use the BOT properly. Not everything is clean, of course.
+There are variables you must fill in order to use the BOT properly.
 | Variables | Description |
 | ----------- | ----------- |
 | CLIENT_ID | Your BOT's client ID |
