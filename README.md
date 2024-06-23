@@ -13,8 +13,9 @@ These are variables you must fill in order to use the BOT properly through `.env
 | OSU_V1_API_KEY | Your osu! account's API key (v1) |
 
 # How to Run
-1. Run the command `deploy-commands.js` first. Wait until process has finished
-2. Run the command `node index.js`
+1. Install all the required packages using `npm install`
+2. Run the command `deploy-commands.js` first. Wait until process has finished
+3. Run the command `node index.js`
 
 The BOT is set up for server only use. If you want to make it global, make sure you adjust it yourself.
 
