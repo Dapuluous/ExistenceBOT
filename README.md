@@ -2,7 +2,7 @@
 I use this to practice writing clean code.  Not everything is clean, of course.
 
 # .env files
-There are variables you must fill in order to use the BOT properly.
+These are variables you must fill in order to use the BOT properly through `.env` file
 | Variables | Description |
 | ----------- | ----------- |
 | CLIENT_ID | Your BOT's client ID |
